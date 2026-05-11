@@ -107,27 +107,15 @@ function showPage(id){
 function closeModal(id){document.getElementById(id).style.display="none";}
 
 // ── AUTH ──
-function goTab(t){
-  var tabs=["In","Reg","Reset"];
-  for(var i=0;i<tabs.length;i++){
-    var tb=document.getElementById("tab-"+tabs[i]);
-    var fm=document.getElementById("form"+tabs[i]);
-    if(tb) tb.className = tabs[i]===t ? "ltab on" : "ltab";
-    if(fm) fm.style.display = tabs[i]===t ? "block" : "none";
-  }
-}
-function switchLoginTab(t){
-  document.querySelectorAll(".ltab").forEach(function(b){b.classList.remove("on");});
-  document.querySelectorAll(".ltab").forEach(function(b){
-    if(b.getAttribute("data-tab")===t) b.classList.add("on");
+function showTab(t){
+  ["In","Reg","Reset"].forEach(function(x){
+    var btn=document.getElementById("tab-"+x);
+    var frm=document.getElementById("form"+x);
+    if(btn) btn.className= x===t ? "ltab on" : "ltab";
+    if(frm) frm.style.display= x===t ? "block" : "none";
   });
-  ["formIn","formReg","formReset"].forEach(function(f){
-    var el=document.getElementById(f);
-    if(el) el.style.display="none";
-  });
-  var target=document.getElementById("form"+t);
-  if(target) target.style.display="block";
 }
+function switchLoginTab(t,el){showTab(t);}
 
 async function doLogin(role){
   const val=document.getElementById("lu").value.trim();
@@ -176,7 +164,7 @@ async function doRegister(){
     const nu={uid:cred.user.uid,username:email.split("@")[0],name,email,phone:phone||"",role:"member",points:0,lastAttendance:null,lastDeparture:null,quizAnswered:false,joinDate:nowAr()};
     await saveUser(nu);
     toast("loginAlert","تم التسجيل ✅ سجلي دخولك الآن","ok");
-    document.querySelectorAll(".ltab")[0].click();
+    showTab("In");
     ["rname","remail","rphone","rpass","rpass2"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   }catch(e){
     const msgs={"auth/email-already-in-use":"الإيميل مسجل مسبقاً","auth/invalid-email":"الإيميل غير صحيح","auth/weak-password":"كلمة المرور ضعيفة"};
@@ -519,14 +507,7 @@ document.getElementById(“a-count”).textContent=adminMembers.length;
 document.getElementById(“a-today”).textContent=adminMembers.filter(m=>m.lastAttendance===todayStr()).length;
 document.getElementById(“a-pts”).textContent=adminMembers.reduce((s,m)=>s+m.points,0);
 }
-function switchAdmin(tab){
-curAdminTab=tab;
-document.querySelectorAll(”.rtab”).forEach(function(b){b.classList.remove(“on”);});
-document.querySelectorAll(”.rtab”).forEach(function(b){
-if(b.getAttribute(“data-admin”)===tab) b.classList.add(“on”);
-});
-renderAdminPanel();
-}
+function switchAdmin(tab,el){curAdminTab=tab;document.querySelectorAll(”.rtab”).forEach(b=>b.classList.remove(“on”));if(el)el.classList.add(“on”);else{document.querySelectorAll(”.rtab”).forEach(b=>{if(b.textContent.includes(tab))b.classList.add(“on”);});}renderAdminPanel();}
 function renderAdminPanel(){
 const p=document.getElementById(“admin-panel”),ms=adminMembers;
 if(curAdminTab===“overview”)rOverview(p,ms);
@@ -790,9 +771,9 @@ html,body{font-family:'Noto Kufi Arabic',sans-serif;background:var(--cream);colo
     <div id="loginAlert"></div>
     <div class="card">
       <div class="tabs">
-        <button class="ltab on"  id="tab-In"    onclick="goTab('In')">دخول</button>
-        <button class="ltab"     id="tab-Reg"   onclick="goTab('Reg')">تسجيل جديد</button>
-        <button class="ltab"     id="tab-Reset" onclick="goTab('Reset')">استعادة كلمة المرور</button>
+        <button class="ltab on"  id="tab-In"    onclick="showTab('In')">دخول</button>
+        <button class="ltab"     id="tab-Reg"   onclick="showTab('Reg')">تسجيل جديد</button>
+        <button class="ltab"     id="tab-Reset" onclick="showTab('Reset')">استعادة كلمة المرور</button>
       </div>
       <div id="formIn">
         <div class="field"><label>الإيميل أو الاسم</label><input id="lu" placeholder="example@gmail.com أو شيماء"/></div>
