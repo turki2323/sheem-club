@@ -107,10 +107,10 @@ function showPage(id){
 function closeModal(id){document.getElementById(id).style.display="none";}
 
 // ── AUTH ──
-function switchLoginTab(t){
+function switchLoginTab(t,el){
   document.querySelectorAll(".ltab").forEach(b=>b.classList.remove("on"));
-  event.target.classList.add("on");
-  ["formIn","formReg","formReset"].forEach(f=>{const el=document.getElementById(f);if(el)el.style.display="none";});
+  if(el)el.classList.add("on");
+  ["formIn","formReg","formReset"].forEach(f=>{const e2=document.getElementById(f);if(e2)e2.style.display="none";});
   document.getElementById("form"+t).style.display="block";
 }
 
@@ -504,7 +504,7 @@ document.getElementById(“a-count”).textContent=adminMembers.length;
 document.getElementById(“a-today”).textContent=adminMembers.filter(m=>m.lastAttendance===todayStr()).length;
 document.getElementById(“a-pts”).textContent=adminMembers.reduce((s,m)=>s+m.points,0);
 }
-function switchAdmin(tab){curAdminTab=tab;document.querySelectorAll(”.rtab”).forEach(b=>b.classList.remove(“on”));event.target.classList.add(“on”);renderAdminPanel();}
+function switchAdmin(tab,el){curAdminTab=tab;document.querySelectorAll(”.rtab”).forEach(b=>b.classList.remove(“on”));if(el)el.classList.add(“on”);else{document.querySelectorAll(”.rtab”).forEach(b=>{if(b.textContent.includes(tab))b.classList.add(“on”);});}renderAdminPanel();}
 function renderAdminPanel(){
 const p=document.getElementById(“admin-panel”),ms=adminMembers;
 if(curAdminTab===“overview”)rOverview(p,ms);
@@ -768,9 +768,9 @@ html,body{font-family:'Noto Kufi Arabic',sans-serif;background:var(--cream);colo
     <div id="loginAlert"></div>
     <div class="card">
       <div class="tabs">
-        <button class="ltab on"  onclick="switchLoginTab('In')">دخول</button>
-        <button class="ltab"     onclick="switchLoginTab('Reg')">تسجيل جديد</button>
-        <button class="ltab"     onclick="switchLoginTab('Reset')">استعادة كلمة المرور</button>
+        <button class="ltab on"  onclick="switchLoginTab('In',this)">دخول</button>
+        <button class="ltab"     onclick="switchLoginTab('Reg',this)">تسجيل جديد</button>
+        <button class="ltab"     onclick="switchLoginTab('Reset',this)">استعادة كلمة المرور</button>
       </div>
       <div id="formIn">
         <div class="field"><label>الإيميل أو الاسم</label><input id="lu" placeholder="example@gmail.com أو شيماء"/></div>
@@ -934,13 +934,13 @@ html,body{font-family:'Noto Kufi Arabic',sans-serif;background:var(--cream);colo
       <div class="sbox"><div class="sval" style="color:var(--gold)" id="a-pts">0</div><div class="slbl">إجمالي النقاط</div></div>
     </div>
     <div class="rtabs">
-      <button class="rtab on" onclick="switchAdmin('overview')">📊 عامة</button>
-      <button class="rtab" onclick="switchAdmin('members')">👥 عضوات</button>
-      <button class="rtab" onclick="switchAdmin('pts')">🏆 نقاط</button>
-      <button class="rtab" onclick="switchAdmin('store')">🎁 متجر</button>
-      <button class="rtab" onclick="switchAdmin('msgs')">📢 رسائل</button>
-      <button class="rtab" onclick="switchAdmin('report')">📄 تقارير</button>
-      <button class="rtab" onclick="switchAdmin('add')">➕ إضافة</button>
+      <button class="rtab on" onclick=\"switchAdmin('overview',this)\">📊 عامة</button>
+      <button class="rtab" onclick=\"switchAdmin('members',this)\">👥 عضوات</button>
+      <button class="rtab" onclick=\"switchAdmin('pts',this)\">🏆 نقاط</button>
+      <button class="rtab" onclick=\"switchAdmin('store',this)\">🎁 متجر</button>
+      <button class="rtab" onclick=\"switchAdmin('msgs',this)\">📢 رسائل</button>
+      <button class="rtab" onclick=\"switchAdmin('report',this)\">📄 تقارير</button>
+      <button class="rtab" onclick=\"switchAdmin('add',this)\">➕ إضافة</button>
     </div>
     <div id="admin-panel"></div>
   </div>
