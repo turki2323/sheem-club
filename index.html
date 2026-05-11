@@ -1,99 +1,96 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نادي شيم 🌸</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>نادي شيم 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700;900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-        :root { --rose: #FF4D8D; --rose-l: #FFE8F3; --navy: #1A1A3E; --border: #F0D8E8; }
-        body { font-family: 'Noto Kufi Arabic', sans-serif; background-color: #FFF8FB; color: var(--navy); margin: 0; direction: rtl; }
-        .container { max-width: 430px; margin: 0 auto; padding: 20px; }
-        .card { background: white; border-radius: 18px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid var(--border); margin-bottom: 15px; }
-        h1 { color: var(--rose); text-align: center; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-bottom: 10px; transition: 0.3s; }
-        .btn-rose { background: var(--rose); color: white; }
-        .btn-navy { background: var(--navy); color: white; }
-        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 2px solid var(--border); border-radius: 12px; box-sizing: border-box; }
-    </style>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<style>
+/* هنا نضع كل التنسيقات (CSS) اللي كانت في كودك الأصلي */
+:root{
+  --rose:#FF4D8D;--rose-l:#FFE8F3;--navy:#1A1A3E;--sky:#38C9F0;--border:#F0D8E8;--muted:#9188A8;
+}
+body{font-family:'Noto Kufi Arabic',sans-serif;background-color:#FFF8FB;direction:rtl;margin:0;}
+#app{max-width:430px;margin:0 auto;min-height:100vh;background:#FFF8FB;position:relative;}
+.card{background:#fff;border-radius:18px;border:1.5px solid var(--border);padding:16px;margin-bottom:12px;box-shadow:0 4px 20px rgba(0,0,0,0.05);}
+.btn{width:100%;padding:12px;border:none;border-radius:12px;font-weight:700;cursor:pointer;display:block;text-align:center;margin-bottom:10px;text-decoration:none;}
+.btn-rose{background:var(--rose);color:#fff;}
+.btn-navy{background:var(--navy);color:#fff;}
+.field input{width:100%;padding:12px;border:2px solid var(--border);border-radius:12px;margin-bottom:10px;text-align:center;box-sizing:border-box;}
+/* ... باقي تنسيقاتك الرائعة ... */
+</style>
 </head>
 <body>
-
-<div class="container">
-    <div id="auth-section" class="card">
-        <h1>🌸 دخول نادي شيم</h1>
-        <div id="login-form">
-            <input type="email" id="email" placeholder="الإيميل">
-            <input type="password" id="password" placeholder="كلمة المرور">
-            <button class="btn btn-rose" onclick="login()">دخول العضوة</button>
-            <p id="msg" style="font-size: 12px; text-align: center;"></p>
+<div id="app">
+    <div id="pg-login" class="page active">
+        <div style="text-align:center; padding: 40px 20px;">
+            <div class="card">
+                <h1 style="color:var(--rose)">🌸 نادي شيم</h1>
+                <div class="field">
+                    <input type="email" id="lu" placeholder="الإيميل أو الاسم">
+                    <input type="password" id="lp" placeholder="كلمة المرور">
+                </div>
+                <button class="btn btn-rose" onclick="doLogin('member')">دخول العضوة</button>
+                <button class="btn btn-navy" onclick="doLogin('admin')">دخول المشرفة</button>
+                <p id="loginAlert" style="color:red; font-size:12px;"></p>
+            </div>
         </div>
     </div>
 
-    <div id="dash-section" class="card" style="display:none;">
-        <h1>أهلاً بك 🌸</h1>
-        <div id="user-info" style="text-align: center;">
-            <p>نقاطك الحالية: <strong id="user-points" style="color: var(--rose); font-size: 24px;">0</strong></p>
-            <button class="btn btn-navy" onclick="logout()">خروج</button>
+    <div id="pg-dash" class="page" style="display:none">
+        <div class="card">
+            <h2>أهلاً بك 🌸</h2>
+            <div id="user-data"></div>
+            <button class="btn btn-navy" onclick="location.reload()">خروج</button>
         </div>
     </div>
 </div>
 
 <script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyDqMgyphHWJUOrMrnSy0AKmtXd2CRghrvs",
-        authDomain: "sheem-club.firebaseapp.com",
-        projectId: "sheem-club",
-        storageBucket: "sheem-club.firebasestorage.app",
-        messagingSenderId: "838391756999",
-        appId: "1:838391756999:web:5204e5b1c50024009966e2"
-    };
+const firebaseConfig = {
+  apiKey: "AIzaSyDqMgyphHWJUOrMrnSy0AKmtXd2CRghrvs",
+  authDomain: "sheem-club.firebaseapp.com",
+  projectId: "sheem-club",
+  storageBucket: "sheem-club.firebasestorage.app",
+  messagingSenderId: "838391756999",
+  appId: "1:838391756999:web:5204e5b1c50024009966e2",
+};
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
 
-    async function login() {
-        const email = document.getElementById("email").value;
-        const pass = document.getElementById("password").value;
-        const msg = document.getElementById("msg");
+// دالة الدخول الأصلية مع إصلاحات برمجية
+async function doLogin(role){
+  const val = document.getElementById("lu").value.trim();
+  const pass = document.getElementById("lp").value;
+  const alertBox = document.getElementById("loginAlert");
 
-        try {
-            const userCredential = await auth.signInWithEmailAndPassword(email, pass);
-            const user = userCredential.user;
-            showDash(user.uid);
-        } catch (error) {
-            msg.innerText = "خطأ في الدخول: " + error.message;
-            msg.style.color = "red";
-        }
+  if(!val || !pass){ alertBox.innerText="ادخلي بياناتك"; return; }
+
+  try {
+    const email = val.includes("@") ? val : val + "@sheem-club.app";
+    const cred = await auth.signInWithEmailAndPassword(email, pass);
+    const userDoc = await db.collection("users").doc(cred.user.uid).get();
+    
+    if(userDoc.exists && userDoc.data().role === role){
+        document.getElementById("pg-login").style.display = "none";
+        document.getElementById("pg-dash").style.display = "block";
+        document.getElementById("user-data").innerHTML = `<h3>نقاطك: ${userDoc.data().points || 0}</h3>`;
+    } else {
+        alertBox.innerText = "الصلاحية غير صحيحة";
+        auth.signOut();
     }
-
-    async function showDash(uid) {
-        document.getElementById("auth-section").style.display = "none";
-        document.getElementById("dash-section").style.display = "block";
-        
-        const userDoc = await db.collection("users").doc(uid).get();
-        if (userDoc.exists) {
-            document.getElementById("user-points").innerText = userDoc.data().points || 0;
-        }
-    }
-
-    function logout() {
-        auth.signOut().then(() => {
-            location.reload();
-        });
-    }
-
-    // التحقق من حالة الدخول عند فتح الصفحة
-    auth.onAuthStateChanged(user => {
-        if (user) showDash(user.uid);
-    });
+  } catch(e) {
+    alertBox.innerText = "خطأ: تأكدي من البيانات";
+  }
+}
 </script>
-
 </body>
 </html>
