@@ -107,6 +107,15 @@ function showPage(id){
 function closeModal(id){document.getElementById(id).style.display="none";}
 
 // ── AUTH ──
+function goTab(t){
+  var tabs=["In","Reg","Reset"];
+  for(var i=0;i<tabs.length;i++){
+    var tb=document.getElementById("tab-"+tabs[i]);
+    var fm=document.getElementById("form"+tabs[i]);
+    if(tb) tb.className = tabs[i]===t ? "ltab on" : "ltab";
+    if(fm) fm.style.display = tabs[i]===t ? "block" : "none";
+  }
+}
 function switchLoginTab(t){
   document.querySelectorAll(".ltab").forEach(function(b){b.classList.remove("on");});
   document.querySelectorAll(".ltab").forEach(function(b){
@@ -781,9 +790,9 @@ html,body{font-family:'Noto Kufi Arabic',sans-serif;background:var(--cream);colo
     <div id="loginAlert"></div>
     <div class="card">
       <div class="tabs">
-        <button class="ltab on"  data-tab="In" onclick="switchLoginTab('In')">دخول</button>
-        <button class="ltab"     data-tab="Reg" onclick="switchLoginTab('Reg')">تسجيل جديد</button>
-        <button class="ltab"     data-tab="Reset" onclick="switchLoginTab('Reset')">استعادة كلمة المرور</button>
+        <button class="ltab on"  id="tab-In"    onclick="goTab('In')">دخول</button>
+        <button class="ltab"     id="tab-Reg"   onclick="goTab('Reg')">تسجيل جديد</button>
+        <button class="ltab"     id="tab-Reset" onclick="goTab('Reset')">استعادة كلمة المرور</button>
       </div>
       <div id="formIn">
         <div class="field"><label>الإيميل أو الاسم</label><input id="lu" placeholder="example@gmail.com أو شيماء"/></div>
