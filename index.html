@@ -107,11 +107,17 @@ function showPage(id){
 function closeModal(id){document.getElementById(id).style.display="none";}
 
 // ── AUTH ──
-function switchLoginTab(t,el){
-  document.querySelectorAll(".ltab").forEach(b=>b.classList.remove("on"));
-  if(el)el.classList.add("on");
-  ["formIn","formReg","formReset"].forEach(f=>{const e2=document.getElementById(f);if(e2)e2.style.display="none";});
-  document.getElementById("form"+t).style.display="block";
+function switchLoginTab(t){
+  document.querySelectorAll(".ltab").forEach(function(b){b.classList.remove("on");});
+  document.querySelectorAll(".ltab").forEach(function(b){
+    if(b.getAttribute("data-tab")===t) b.classList.add("on");
+  });
+  ["formIn","formReg","formReset"].forEach(function(f){
+    var el=document.getElementById(f);
+    if(el) el.style.display="none";
+  });
+  var target=document.getElementById("form"+t);
+  if(target) target.style.display="block";
 }
 
 async function doLogin(role){
@@ -504,7 +510,14 @@ document.getElementById(“a-count”).textContent=adminMembers.length;
 document.getElementById(“a-today”).textContent=adminMembers.filter(m=>m.lastAttendance===todayStr()).length;
 document.getElementById(“a-pts”).textContent=adminMembers.reduce((s,m)=>s+m.points,0);
 }
-function switchAdmin(tab,el){curAdminTab=tab;document.querySelectorAll(”.rtab”).forEach(b=>b.classList.remove(“on”));if(el)el.classList.add(“on”);else{document.querySelectorAll(”.rtab”).forEach(b=>{if(b.textContent.includes(tab))b.classList.add(“on”);});}renderAdminPanel();}
+function switchAdmin(tab){
+curAdminTab=tab;
+document.querySelectorAll(”.rtab”).forEach(function(b){b.classList.remove(“on”);});
+document.querySelectorAll(”.rtab”).forEach(function(b){
+if(b.getAttribute(“data-admin”)===tab) b.classList.add(“on”);
+});
+renderAdminPanel();
+}
 function renderAdminPanel(){
 const p=document.getElementById(“admin-panel”),ms=adminMembers;
 if(curAdminTab===“overview”)rOverview(p,ms);
@@ -768,9 +781,9 @@ html,body{font-family:'Noto Kufi Arabic',sans-serif;background:var(--cream);colo
     <div id="loginAlert"></div>
     <div class="card">
       <div class="tabs">
-        <button class="ltab on"  onclick="switchLoginTab('In',this)">دخول</button>
-        <button class="ltab"     onclick="switchLoginTab('Reg',this)">تسجيل جديد</button>
-        <button class="ltab"     onclick="switchLoginTab('Reset',this)">استعادة كلمة المرور</button>
+        <button class="ltab on"  data-tab="In" onclick="switchLoginTab('In')">دخول</button>
+        <button class="ltab"     data-tab="Reg" onclick="switchLoginTab('Reg')">تسجيل جديد</button>
+        <button class="ltab"     data-tab="Reset" onclick="switchLoginTab('Reset')">استعادة كلمة المرور</button>
       </div>
       <div id="formIn">
         <div class="field"><label>الإيميل أو الاسم</label><input id="lu" placeholder="example@gmail.com أو شيماء"/></div>
