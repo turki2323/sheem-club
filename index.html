@@ -2,234 +2,340 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>نادي شيم 🌸</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نادي شيم</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 <style>
 :root{
-  --rose:#ff4d8d;
-  --rose-light:#ffe8f3;
-  --navy:#1a1a3e;
+  --pink:#ff3f8e;
+  --pink2:#ffe8f3;
+  --navy:#171735;
+  --blue:#35c9f2;
+  --orange:#ffa91f;
+  --green:#15c974;
   --border:#f0d8e8;
   --muted:#9188a8;
 }
 
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
   margin:0;
   font-family:'Noto Kufi Arabic',sans-serif;
-  background:linear-gradient(180deg,#fff2f8,#fff);
+  background:
+    radial-gradient(circle at top right,#ffe1f0 0,#fff7fb 28%,transparent 45%),
+    radial-gradient(circle at bottom left,#e2f7ff 0,#fff7fb 30%,transparent 45%),
+    #fff7fb;
   min-height:100vh;
+  color:var(--navy);
 }
 
-#app{
+.app{
   max-width:430px;
   margin:auto;
   min-height:100vh;
-  padding:24px 16px;
+  padding:18px 14px 40px;
+}
+
+.hidden{display:none!important}
+
+.top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+  border-bottom:1px solid #f4dceb;
+  padding-bottom:12px;
+}
+
+.top h2{
+  margin:0;
+  font-size:17px;
+  font-weight:900;
+}
+
+.logout{
+  background:#ffe8f3;
+  color:var(--pink);
+  border:0;
+  padding:7px 14px;
+  border-radius:999px;
+  font-weight:800;
+  font-family:inherit;
 }
 
 .logo{
-  text-align:center;
-  margin-top:25px;
-  margin-bottom:25px;
-}
-
-.logo-circle{
-  width:92px;
+  width:160px;
   height:92px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#ff4d8d,#ff8fbd);
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:42px;
-  box-shadow:0 12px 30px rgba(255,77,141,.3);
-}
-
-.logo h1{
-  color:var(--rose);
-  margin:14px 0 4px;
-  font-size:28px;
-}
-
-.logo p{
-  color:var(--muted);
-  margin:0;
-  font-size:14px;
+  object-fit:contain;
+  display:block;
+  margin:18px auto;
+  background:white;
+  border-radius:22px;
+  padding:10px;
 }
 
 .card{
-  background:#fff;
+  background:white;
   border:1.5px solid var(--border);
-  border-radius:28px;
-  padding:18px;
-  box-shadow:0 12px 40px rgba(255,77,141,.12);
+  border-radius:22px;
+  padding:16px;
+  margin-bottom:14px;
+  box-shadow:0 12px 35px rgba(255,63,142,.10);
+  overflow:hidden;
+}
+
+.card-line{
+  border-top:4px solid;
+  border-image:linear-gradient(90deg,var(--pink),var(--blue)) 1;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.stat{
+  background:white;
+  border:1.5px solid var(--border);
+  border-radius:14px;
+  text-align:center;
+  padding:14px 6px;
+  box-shadow:0 8px 22px rgba(0,0,0,.04);
+}
+
+.stat b{
+  display:block;
+  font-size:22px;
+  margin-bottom:4px;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:700;
+}
+
+.pink{color:var(--pink)}
+.green{color:var(--green)}
+.orange{color:var(--orange)}
+
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  justify-content:center;
+  margin:10px 0;
+}
+
+.chip{
+  border:1.5px solid var(--border);
+  background:white;
+  color:#756d8d;
+  border-radius:999px;
+  padding:8px 12px;
+  font-family:inherit;
+  font-size:12px;
+  font-weight:800;
+}
+
+.chip.active{
+  background:var(--pink);
+  color:white;
+  border-color:var(--pink);
+}
+
+.title{
+  font-size:16px;
+  font-weight:900;
+  margin:0 0 14px;
+}
+
+.big-btn{
+  width:100%;
+  border:0;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:10px;
+  color:white;
+  font-family:inherit;
+  font-weight:900;
+  font-size:15px;
+}
+
+.btn-pink{background:linear-gradient(135deg,#ff3f8e,#ff1978)}
+.btn-blue{background:linear-gradient(135deg,#45d6f5,#13abd0)}
+.btn-orange{background:linear-gradient(135deg,#ffc343,#ff9800)}
+.btn-navy{background:#171735}
+
+.form input{
+  width:100%;
+  padding:14px;
+  border:2px solid var(--border);
+  border-radius:15px;
+  margin-bottom:10px;
+  font-family:inherit;
+  text-align:center;
 }
 
 .tabs{
   display:flex;
   background:#f8ddeb;
-  border-radius:18px;
+  border-radius:16px;
   padding:6px;
-  gap:6px;
-  margin-bottom:18px;
+  gap:5px;
+  margin-bottom:14px;
 }
 
 .tab{
   flex:1;
   border:0;
   background:transparent;
-  padding:12px 6px;
-  border-radius:14px;
-  font-family:'Noto Kufi Arabic',sans-serif;
-  font-weight:700;
-  font-size:13px;
+  border-radius:12px;
+  padding:10px 4px;
+  font-family:inherit;
+  font-weight:800;
   color:#8f86a3;
-  cursor:pointer;
 }
 
 .tab.active{
-  background:#fff;
-  color:var(--rose);
-  box-shadow:0 5px 14px rgba(0,0,0,.06);
-}
-
-.field input{
-  width:100%;
-  padding:15px;
-  margin-bottom:12px;
-  border:2px solid var(--border);
-  border-radius:16px;
-  font-family:'Noto Kufi Arabic',sans-serif;
-  text-align:center;
-  font-size:14px;
-  outline:none;
-}
-
-.field input:focus{
-  border-color:var(--rose);
-}
-
-.btn{
-  width:100%;
-  border:0;
-  border-radius:16px;
-  padding:14px;
-  margin-bottom:10px;
-  font-family:'Noto Kufi Arabic',sans-serif;
-  font-weight:800;
-  font-size:15px;
-  cursor:pointer;
-}
-
-.btn-rose{
-  background:linear-gradient(135deg,#ff4d8d,#ff7aad);
-  color:#fff;
-}
-
-.btn-navy{
-  background:var(--navy);
-  color:#fff;
+  background:white;
+  color:var(--pink);
 }
 
 .alert{
   text-align:center;
-  color:#d93025;
   font-size:13px;
+  color:#d93025;
   min-height:22px;
 }
 
-.success{
-  color:#198754;
+.success{color:#198754}
+
+.member-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#fff8fb;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:8px;
 }
 
-.hidden{
-  display:none;
-}
-
-.dash{
-  text-align:center;
+.small{
+  font-size:12px;
+  color:var(--muted);
 }
 </style>
 </head>
 
 <body>
 
-<div id="app">
+<div class="app">
 
-  <div id="pg-login">
+  <section id="loginPage">
+    <img class="logo" src="https://dummyimage.com/400x220/ffffff/1a1a3e.png&text=%D9%86%D8%A7%D8%AF%D9%8A+%D8%B4%D9%8A%D9%85" alt="شعار نادي شيم">
 
-    <div class="logo">
-      <div class="logo-circle">🌸</div>
-      <h1>نادي شيم</h1>
-      <p>منصتك الجميلة للعضوات والمشرفات</p>
-    </div>
-
-    <div class="card">
-
+    <div class="card card-line">
       <div class="tabs">
-        <button class="tab active" onclick="showTab('login')">دخول</button>
-        <button class="tab" onclick="showTab('register')">تسجيل جديد</button>
-        <button class="tab" onclick="showTab('reset')">استعادة</button>
+        <button class="tab active" onclick="showAuth('login')">دخول</button>
+        <button class="tab" onclick="showAuth('register')">تسجيل جديد</button>
+        <button class="tab" onclick="showAuth('reset')">استعادة</button>
       </div>
 
-      <div id="loginBox">
-        <div class="field">
-          <input type="email" id="lu" placeholder="الإيميل">
-          <input type="password" id="lp" placeholder="كلمة المرور">
-        </div>
-
-        <button class="btn btn-rose" onclick="doLogin('member')">🌸 دخول العضوة</button>
-        <button class="btn btn-navy" onclick="doLogin('admin')">👩‍💼 دخول المشرفة</button>
+      <div id="loginBox" class="form">
+        <input id="loginEmail" type="email" placeholder="الإيميل">
+        <input id="loginPass" type="password" placeholder="كلمة المرور">
+        <button class="big-btn btn-pink" onclick="login('member')">🌸 دخول العضوة</button>
+        <button class="big-btn btn-navy" onclick="login('admin')">👩‍💼 دخول المشرفة</button>
       </div>
 
-      <div id="registerBox" class="hidden">
-        <div class="field">
-          <input type="text" id="ru" placeholder="الاسم">
-          <input type="email" id="re" placeholder="الإيميل">
-          <input type="password" id="rp" placeholder="كلمة المرور">
-        </div>
-
-        <button class="btn btn-rose" onclick="registerUser()">إنشاء حساب جديد</button>
+      <div id="registerBox" class="form hidden">
+        <input id="regName" type="text" placeholder="الاسم">
+        <input id="regEmail" type="email" placeholder="الإيميل">
+        <input id="regPass" type="password" placeholder="كلمة المرور">
+        <button class="big-btn btn-pink" onclick="registerUser()">إنشاء حساب</button>
       </div>
 
-      <div id="resetBox" class="hidden">
-        <div class="field">
-          <input type="email" id="resetEmail" placeholder="اكتبي الإيميل">
-        </div>
-
-        <button class="btn btn-navy" onclick="resetPassword()">إرسال رابط الاستعادة</button>
+      <div id="resetBox" class="form hidden">
+        <input id="resetEmail" type="email" placeholder="الإيميل">
+        <button class="big-btn btn-blue" onclick="resetPassword()">إرسال رابط الاستعادة</button>
       </div>
 
       <p id="msg" class="alert"></p>
-
     </div>
-  </div>
+  </section>
 
-  <div id="pg-dash" class="hidden">
-    <div class="logo">
-      <div class="logo-circle">🌸</div>
-      <h1>أهلاً بك</h1>
+  <section id="adminPage" class="hidden">
+    <div class="top">
+      <button class="logout" onclick="logout()">خروج</button>
+      <h2>👩‍💼 لوحة التحكم</h2>
+      <span></span>
     </div>
 
-    <div class="card dash">
-      <h2 id="welcomeName">مرحباً</h2>
-      <p id="userRole"></p>
-      <h3 id="userPoints"></h3>
-      <button class="btn btn-navy" onclick="logout()">تسجيل الخروج</button>
+    <div class="stats">
+      <div class="stat">
+        <b class="orange" id="totalPoints">0</b>
+        <span>إجمالي النقاط</span>
+      </div>
+      <div class="stat">
+        <b class="green" id="todayAttendance">0</b>
+        <span>حاضرات اليوم</span>
+      </div>
+      <div class="stat">
+        <b class="pink" id="membersCount">0</b>
+        <span>العضوات</span>
+      </div>
     </div>
-  </div>
+
+    <div class="chips">
+      <button class="chip">📊 عامة</button>
+      <button class="chip">👥 عضوات</button>
+      <button class="chip">🏆 نقاط</button>
+      <button class="chip">🎁 متجر</button>
+      <button class="chip">📮 رسائل</button>
+      <button class="chip">➕ إضافة</button>
+      <button class="chip active">📄 تقارير</button>
+    </div>
+
+    <div class="card card-line">
+      <h3 class="title">📄 التقارير</h3>
+      <button class="big-btn btn-pink" onclick="alert('قريبًا: تقرير كل العضوات')">👥 تقرير كل العضوات</button>
+      <button class="big-btn btn-blue" onclick="alert('قريبًا: تقرير الحضور')">📍 تقرير الحضور</button>
+      <button class="big-btn btn-orange" onclick="alert('قريبًا: تقرير المتميزات')">🏆 تقرير المتميزات</button>
+    </div>
+
+    <div class="card card-line">
+      <h3 class="title">📊 ملخص</h3>
+      <div id="membersList">
+        <p class="small">جاري تحميل البيانات...</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="memberPage" class="hidden">
+    <div class="top">
+      <button class="logout" onclick="logout()">خروج</button>
+      <h2>🌸 لوحة العضوة</h2>
+      <span></span>
+    </div>
+
+    <div class="card card-line" style="text-align:center">
+      <h2 id="memberName">أهلًا بك</h2>
+      <p>نقاطك الحالية</p>
+      <h1 class="pink" id="memberPoints">0</h1>
+      <button class="big-btn btn-pink">حضوري اليوم 🌸</button>
+    </div>
+  </section>
 
 </div>
 
@@ -244,129 +350,164 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-function msg(text,type="error"){
-  const box=document.getElementById("msg");
-  box.innerText=text;
-  box.className= type==="success" ? "alert success" : "alert";
+function showAuth(type){
+  document.getElementById('loginBox').classList.add('hidden');
+  document.getElementById('registerBox').classList.add('hidden');
+  document.getElementById('resetBox').classList.add('hidden');
+
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+
+  if(type === 'login'){
+    loginBox.classList.remove('hidden');
+    document.querySelectorAll('.tab')[0].classList.add('active');
+  }
+
+  if(type === 'register'){
+    registerBox.classList.remove('hidden');
+    document.querySelectorAll('.tab')[1].classList.add('active');
+  }
+
+  if(type === 'reset'){
+    resetBox.classList.remove('hidden');
+    document.querySelectorAll('.tab')[2].classList.add('active');
+  }
+
+  setMsg('');
 }
 
-function showTab(tab){
-  document.getElementById("loginBox").classList.add("hidden");
-  document.getElementById("registerBox").classList.add("hidden");
-  document.getElementById("resetBox").classList.add("hidden");
-
-  document.querySelectorAll(".tab").forEach(btn=>{
-    btn.classList.remove("active");
-  });
-
-  if(tab==="login"){
-    document.getElementById("loginBox").classList.remove("hidden");
-    document.querySelectorAll(".tab")[0].classList.add("active");
-  }
-
-  if(tab==="register"){
-    document.getElementById("registerBox").classList.remove("hidden");
-    document.querySelectorAll(".tab")[1].classList.add("active");
-  }
-
-  if(tab==="reset"){
-    document.getElementById("resetBox").classList.remove("hidden");
-    document.querySelectorAll(".tab")[2].classList.add("active");
-  }
-
-  msg("");
+function setMsg(text,type='error'){
+  const m=document.getElementById('msg');
+  m.textContent=text;
+  m.className=type==='success'?'alert success':'alert';
 }
 
 async function registerUser(){
-  const name=document.getElementById("ru").value.trim();
-  const email=document.getElementById("re").value.trim();
-  const pass=document.getElementById("rp").value;
+  const name=regName.value.trim();
+  const email=regEmail.value.trim();
+  const pass=regPass.value;
 
   if(!name || !email || !pass){
-    msg("اكتبي الاسم والإيميل وكلمة المرور");
-    return;
-  }
-
-  if(pass.length < 6){
-    msg("كلمة المرور يجب أن تكون 6 أحرف أو أكثر");
+    setMsg('اكتب الاسم والإيميل وكلمة المرور');
     return;
   }
 
   try{
-    const cred = await auth.createUserWithEmailAndPassword(email,pass);
+    const cred=await auth.createUserWithEmailAndPassword(email,pass);
 
-    await db.collection("users").doc(cred.user.uid).set({
-      name:name,
-      email:email,
-      role:"member",
+    await db.collection('users').doc(cred.user.uid).set({
+      name,
+      email,
+      role:'member',
       points:0,
+      attendance:0,
       createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    msg("تم إنشاء الحساب بنجاح 🌸 سجلي الدخول الآن","success");
-    showTab("login");
-
+    setMsg('تم إنشاء الحساب بنجاح 🌸','success');
+    showAuth('login');
   }catch(e){
-    msg("خطأ في التسجيل: " + e.message);
+    setMsg(e.message);
   }
 }
 
-async function doLogin(role){
-  const email=document.getElementById("lu").value.trim();
-  const pass=document.getElementById("lp").value;
+async function login(role){
+  const email=loginEmail.value.trim();
+  const pass=loginPass.value;
 
   if(!email || !pass){
-    msg("اكتبي الإيميل وكلمة المرور");
+    setMsg('اكتب الإيميل وكلمة المرور');
     return;
   }
 
   try{
-    const cred = await auth.signInWithEmailAndPassword(email,pass);
-    const doc = await db.collection("users").doc(cred.user.uid).get();
+    const cred=await auth.signInWithEmailAndPassword(email,pass);
+    const snap=await db.collection('users').doc(cred.user.uid).get();
 
-    if(!doc.exists){
-      msg("لا توجد بيانات لهذا الحساب");
+    if(!snap.exists){
+      setMsg('لا توجد بيانات لهذا الحساب');
+      return;
+    }
+
+    const user=snap.data();
+
+    if(user.role !== role){
+      setMsg('الصلاحية غير صحيحة لهذا الزر');
       await auth.signOut();
       return;
     }
 
-    const data = doc.data();
+    loginPage.classList.add('hidden');
 
-    if(data.role !== role){
-      msg("الصلاحية غير صحيحة لهذا الزر");
-      await auth.signOut();
-      return;
+    if(role === 'admin'){
+      adminPage.classList.remove('hidden');
+      loadAdmin();
+    }else{
+      memberPage.classList.remove('hidden');
+      memberName.textContent='أهلًا ' + (user.name || '');
+      memberPoints.textContent=user.points || 0;
     }
-
-    document.getElementById("pg-login").classList.add("hidden");
-    document.getElementById("pg-dash").classList.remove("hidden");
-
-    document.getElementById("welcomeName").innerText = "مرحباً " + (data.name || "بك");
-    document.getElementById("userRole").innerText = data.role === "admin" ? "حساب مشرفة" : "حساب عضوة";
-    document.getElementById("userPoints").innerText = "النقاط: " + (data.points || 0);
 
   }catch(e){
-    msg("خطأ في الدخول: تأكدي من الإيميل وكلمة المرور");
+    setMsg('خطأ في الدخول');
   }
 }
 
+async function loadAdmin(){
+  const list=document.getElementById('membersList');
+  list.innerHTML='<p class="small">جاري تحميل العضوات...</p>';
+
+  const snap=await db.collection('users').get();
+
+  let count=0;
+  let points=0;
+  let attendance=0;
+  let html='';
+
+  snap.forEach(doc=>{
+    const u=doc.data();
+
+    if(u.role === 'member'){
+      count++;
+      points += Number(u.points || 0);
+      attendance += Number(u.attendance || 0);
+
+      html += `
+      <div class="member-row">
+        <div>
+          <b>${u.name || 'عضوة'}</b>
+          <div class="small">${u.email || ''}</div>
+        </div>
+        <div>
+          <b class="pink">${u.points || 0}</b>
+          <div class="small">نقطة</div>
+        </div>
+      </div>`;
+    }
+  });
+
+  membersCount.textContent=count;
+  totalPoints.textContent=points;
+  todayAttendance.textContent=attendance;
+
+  list.innerHTML = html || '<p class="small">لا توجد عضوات حتى الآن</p>';
+}
+
 async function resetPassword(){
-  const email=document.getElementById("resetEmail").value.trim();
+  const email=resetEmail.value.trim();
 
   if(!email){
-    msg("اكتبي الإيميل أولاً");
+    setMsg('اكتب الإيميل');
     return;
   }
 
   try{
     await auth.sendPasswordResetEmail(email);
-    msg("تم إرسال رابط استعادة كلمة المرور إلى الإيميل","success");
+    setMsg('تم إرسال رابط الاستعادة','success');
   }catch(e){
-    msg("خطأ: " + e.message);
+    setMsg(e.message);
   }
 }
 
